@@ -50,7 +50,7 @@ class CombinedTemperatureChart extends StatelessWidget {
           Card(
             elevation: 10,
             shadowColor: Colors.black,
-            color: const Color.fromARGB(255, 243, 243, 243),
+            color: Colors.white,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
@@ -73,15 +73,16 @@ class CombinedTemperatureChart extends StatelessWidget {
                         padding: const EdgeInsets.all(16.0),
                         decoration: BoxDecoration(
                           color: const Color.fromARGB(255, 217, 243, 243),
-                          borderRadius: BorderRadius.circular(10.0), // Round corners
+                          borderRadius:
+                              BorderRadius.circular(10.0), // Round corners
                           boxShadow: [
                             BoxShadow(
                               color: const Color.fromARGB(255, 0, 156, 143)
                                   .withOpacity(0.5),
                               spreadRadius: 2,
                               blurRadius: 5,
-                              offset:
-                              const Offset(0, 3), // changes position of shadow
+                              offset: const Offset(
+                                  0, 3), // changes position of shadow
                             ),
                           ],
                         ),
@@ -107,9 +108,9 @@ class CombinedTemperatureChart extends StatelessWidget {
                   Row(
                     children: [
                       _buildLegendRow(
-                          const Color.fromARGB(255, 20, 44, 21), legend3),
+                          const Color.fromARGB(255, 254, 76, 0), legend3),
                       _buildLegendRow(
-                          const Color.fromARGB(255, 23, 124, 26), legend4),
+                          const Color.fromARGB(255, 1, 26, 110), legend4),
                     ],
                   ),
                   const SizedBox(height: 20),
@@ -122,7 +123,7 @@ class CombinedTemperatureChart extends StatelessWidget {
                         minY: 0,
                         maxY: 100,
                         backgroundColor:
-                        const Color.fromARGB(255, 222, 247, 213),
+                            const Color.fromARGB(255, 222, 247, 213),
                         titlesData: FlTitlesData(
                           topTitles: SideTitles(showTitles: false),
                           rightTitles: SideTitles(
@@ -138,8 +139,7 @@ class CombinedTemperatureChart extends StatelessWidget {
                             showTitles: true,
                             getTitles: (value) {
                               int index = value.toInt();
-                              if (index >= 0 &&
-                                  index < allTimestamps.length) {
+                              if (index >= 0 && index < allTimestamps.length) {
                                 DateTime timestamp = allTimestamps[index];
                                 return DateFormat.jm().format(timestamp);
                               }
@@ -159,7 +159,7 @@ class CombinedTemperatureChart extends StatelessWidget {
                               int index = value.toInt();
                               if (index < temp1Data.length && index >= 0) {
                                 String dataValue = temp1Data[index]
-                                ['DATA']; // Use your API data here
+                                    ['DATA']; // Use your API data here
                                 return dataValue;
                               }
                               return '';
@@ -185,10 +185,10 @@ class CombinedTemperatureChart extends StatelessWidget {
                         lineBarsData: [
                           _buildLineChartData(temp1Data, Colors.blue),
                           _buildLineChartData(temp2Data, Colors.green),
-                          _buildLineChartData(humi1Data,
-                              const Color.fromARGB(255, 20, 44, 21)),
-                          _buildLineChartData(humi2Data,
-                              const Color.fromARGB(255, 23, 124, 26)),
+                          _buildLineChartData(
+                              humi1Data, const Color.fromARGB(255, 254, 76, 0)),
+                          _buildLineChartData(
+                              humi2Data, const Color.fromARGB(255, 1, 26, 110)),
                         ],
                         lineTouchData: LineTouchData(
                           touchTooltipData: LineTouchTooltipData(
@@ -214,8 +214,8 @@ class CombinedTemperatureChart extends StatelessWidget {
                                   return LineTooltipItem(allInfo,
                                       const TextStyle(color: Colors.white));
                                 } else {
-                                  return LineTooltipItem('',
-                                      const TextStyle(color: Colors.white));
+                                  return LineTooltipItem(
+                                      '', const TextStyle(color: Colors.white));
                                 }
                               }).toList();
                             },
@@ -228,25 +228,24 @@ class CombinedTemperatureChart extends StatelessWidget {
               ),
             ),
           ),
-          const Divider(color: Colors.black45),
           const Row(
             children: [
               Column(
                 children: [
-                  Text(
-                    'DOWNLOAD AS PDF',
-                    style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black45),
-                  ),
                   SizedBox(
                     height: 10,
                   ),
                   Text(
+                    'DOWNLOAD AS PDF',
+                    style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black45),
+                  ),
+                  Text(
                     'DOWNLOAD AS CSV',
                     style: TextStyle(
-                        fontSize: 25,
+                        fontSize: 15,
                         fontWeight: FontWeight.bold,
                         color: Colors.black45),
                   ),
@@ -254,6 +253,7 @@ class CombinedTemperatureChart extends StatelessWidget {
               ),
             ],
           ),
+          const Divider(color: Colors.black45),
         ],
       ),
     );

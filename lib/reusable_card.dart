@@ -5,13 +5,12 @@ class ReusableCard extends StatelessWidget {
   final String temp;
   final String humidity;
 
-  const ReusableCard({
-    Key?key,
-    required this.chamber,
-    required this.temp,
-    required this.humidity}): super(key: key);
-
-
+  const ReusableCard(
+      {Key? key,
+      required this.chamber,
+      required this.temp,
+      required this.humidity})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +31,7 @@ class ReusableCard extends StatelessWidget {
                 height: 6,
                 decoration: const BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [Colors.white, Colors.blueAccent],
+                    colors: [Colors.white, Colors.lightBlueAccent],
                   ),
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(16.0),
@@ -56,8 +55,10 @@ class ReusableCard extends StatelessWidget {
                     const SizedBox(height: 12),
                     Row(
                       children: [
-                        const Icon(Icons.thermostat_outlined,
-                        color: Colors.black,),
+                        const Icon(
+                          Icons.thermostat_outlined,
+                          color: Colors.black,
+                        ),
                         Text(
                           temp,
                           style: const TextStyle(
@@ -70,8 +71,10 @@ class ReusableCard extends StatelessWidget {
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        const Icon(Icons.water_drop_outlined,
-                          color: Colors.black,),
+                        const Icon(
+                          Icons.water_drop_outlined,
+                          color: Colors.black,
+                        ),
                         Text(
                           humidity,
                           style: const TextStyle(
@@ -88,7 +91,7 @@ class ReusableCard extends StatelessWidget {
                 height: 6,
                 decoration: const BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [Colors.blueAccent, Colors.white],
+                    colors: [Colors.lightBlueAccent, Colors.white],
                   ),
                   borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(12.0),

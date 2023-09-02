@@ -1,4 +1,4 @@
-import 'package:craun_mist/hamepage.dart';
+import 'package:craun_mist/screen/hamepage.dart';
 import 'package:flutter/material.dart';
 // import 'input_page.dart';
 
@@ -14,11 +14,12 @@ class mainPage extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData.dark().copyWith(
           colorScheme: ThemeData().colorScheme.copyWith(
-                primary: Colors.blueAccent,
+                primary: Colors.lightBlueAccent,
               ),
           scaffoldBackgroundColor: Colors.white,
-          textTheme: const TextTheme(bodyLarge: TextStyle(color: Colors.white))),
-      home: homePage(),
+          textTheme:
+              const TextTheme(bodyLarge: TextStyle(color: Colors.white))),
+      home: const homePage(),
       debugShowCheckedModeBanner: false,
     );
   }

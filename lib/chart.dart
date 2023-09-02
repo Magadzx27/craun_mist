@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
+// ignore: camel_case_types
 class chart extends StatelessWidget {
   final String chamber;
   final String temp;
   final String humidity;
 
-  const chart({
-    Key?key,
-    required this.chamber,
-    required this.temp,
-    required this.humidity}): super(key: key);
-
-
+  const chart(
+      {Key? key,
+      required this.chamber,
+      required this.temp,
+      required this.humidity})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -56,8 +56,10 @@ class chart extends StatelessWidget {
                     const SizedBox(height: 12),
                     Row(
                       children: [
-                        const Icon(Icons.thermostat_outlined,
-                          color: Colors.black,),
+                        const Icon(
+                          Icons.thermostat_outlined,
+                          color: Colors.black,
+                        ),
                         Text(
                           temp,
                           style: const TextStyle(
@@ -70,8 +72,10 @@ class chart extends StatelessWidget {
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        const Icon(Icons.water_drop_outlined,
-                          color: Colors.black,),
+                        const Icon(
+                          Icons.water_drop_outlined,
+                          color: Colors.black,
+                        ),
                         Text(
                           humidity,
                           style: const TextStyle(
