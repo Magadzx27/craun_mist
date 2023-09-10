@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:craun_mist/reusable_card.dart';
 import 'package:flutter/material.dart';
 
@@ -30,6 +32,22 @@ class TempScreen extends StatefulWidget {
 }
 
 class _TempScreenState extends State<TempScreen> {
+  int lastUpdateTime = DateTime.now().millisecondsSinceEpoch;
+  late Timer timer;
+
+  @override
+  void initState() {
+    super.initState();
+    // Start a timer to update the last update time every second
+  }
+
+  @override
+  void dispose() {
+    // Dispose of the timer when the widget is disposed
+    timer.cancel();
+    super.dispose();
+  }
+
   List<Map<String, dynamic>> limitChartData(
     List<Map<String, dynamic>> data,
     int limit,
@@ -83,13 +101,13 @@ class _TempScreenState extends State<TempScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // Widgets for showing temperature and humidity cards
-            const Padding(
+            Padding(
               padding: EdgeInsets.fromLTRB(0, 15, 20, 5),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Text(
-                    'Last Updated 1 seconds ago',
+                    'Last Updated ${calculateTimeDifference(widget.temp1Data)}',
                     style: TextStyle(color: Colors.black45),
                   ),
                 ],
@@ -98,28 +116,28 @@ class _TempScreenState extends State<TempScreen> {
             ReusableCard(
               chamber: 'Chamber 1',
               temp: widget.temp1Data.length > 3
-                  ? 'Temperature: ${widget.temp1Data[3]['DATA']}°c'
+                  ? 'Temperature: ${widget.temp1Data[0]['DATA']}°c'
                   : 'Temperature: N/A',
               humidity: widget.humi1Data.length > 3
-                  ? 'Humidity: ${widget.humi1Data[3]['DATA']}%'
+                  ? 'Humidity: ${widget.humi1Data[0]['DATA']}%'
                   : 'Humidity: N/A',
             ),
             ReusableCard(
               chamber: 'Chamber 2',
               temp: widget.temp2Data.length > 3
-                  ? 'Temperature: ${widget.temp2Data[3]['DATA']}°c'
+                  ? 'Temperature: ${widget.temp2Data[0]['DATA']}°c'
                   : 'Temperature: N/A',
               humidity: widget.humi2Data.length > 3
-                  ? 'Humidity: ${widget.humi2Data[3]['DATA']}%'
+                  ? 'Humidity: ${widget.humi2Data[0]['DATA']}%'
                   : 'Humidity: N/A',
             ),
             ReusableCard(
               chamber: 'Chamber 3',
               temp: widget.temp3Data.length > 3
-                  ? 'Temperature: ${widget.temp3Data[3]['DATA']}°c'
+                  ? 'Temperature: ${widget.temp3Data[0]['DATA']}°c'
                   : 'Temperature: N/A',
               humidity: widget.humi3Data.length > 3
-                  ? 'Humidity: ${widget.humi3Data[3]['DATA']}%'
+                  ? 'Humidity: ${widget.humi3Data[0]['DATA']}%'
                   : 'Humidity: N/A',
             ),
             ReusableCard(
@@ -134,10 +152,10 @@ class _TempScreenState extends State<TempScreen> {
           ],
         ),
         _buildCombinedTemperatureChart(
-          limitChartData(widget.temp1Data, 150),
-          limitChartData(widget.temp2Data, 150),
-          limitChartData(widget.humi1Data, 150),
-          limitChartData(widget.humi2Data, 150),
+          limitChartData(widget.temp1Data, 300),
+          limitChartData(widget.temp2Data, 300),
+          limitChartData(widget.humi1Data, 300),
+          limitChartData(widget.humi2Data, 300),
           'Chamber 1 & 2',
           'Chamber 1 & 2',
           'Temperature 1',
@@ -161,5 +179,25 @@ class _TempScreenState extends State<TempScreen> {
         ),
       ],
     );
+  }
+
+  String calculateTimeDifference(List<Map<String, dynamic>> data) {
+    if (data.isNotEmpty) {
+      final lastDataTimestamp = DateTime.parse(data.first['TS']);
+      final currentTime = DateTime.now();
+      final difference = currentTime.difference(lastDataTimestamp);
+
+      if (difference.inDays > 0) {
+        return '${difference.inDays} days ago';
+      } else if (difference.inHours > 0) {
+        return '${difference.inHours} hours ago';
+      } else if (difference.inMinutes > 0) {
+        return '${difference.inMinutes} minutes ago';
+      } else {
+        return 'Just now';
+      }
+    } else {
+      return 'N/A';
+    }
   }
 }

@@ -19,7 +19,7 @@ class mainPage extends StatelessWidget {
           scaffoldBackgroundColor: Colors.white,
           textTheme:
               const TextTheme(bodyLarge: TextStyle(color: Colors.white))),
-      home: const homePage(),
+      home: HomePage(),
       debugShowCheckedModeBanner: false,
     );
   }

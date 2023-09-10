@@ -1,25 +1,27 @@
 import 'dart:convert';
+import 'package:craun_mist/screen/SettingPage.dart';
 import 'package:craun_mist/screen/TempScreen.dart';
 import 'package:craun_mist/screen/profilePage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-
 import 'loginpage.dart';
 import 'registrationpage.dart';
+import 'dart:core';
+import 'dart:async';
 
-// ignore: camel_case_types
-class homePage extends StatelessWidget {
-  const homePage({super.key});
+class HomePage extends StatelessWidget {
+  const HomePage({super.key, Key});
 
   @override
   Widget build(BuildContext context) {
-    return AuthenticationWrapper();
+    return const AuthenticationWrapper();
   }
 }
 
 class AuthenticationWrapper extends StatefulWidget {
-  const AuthenticationWrapper({super.key});
+  const AuthenticationWrapper({super.key, Key});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -28,7 +30,89 @@ class AuthenticationWrapper extends StatefulWidget {
 
 class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
   bool isAuthenticated = false;
+  int notificationCount = 0; // Initialize notification count
   int _selectedIndex = 0;
+
+  Timer? notificationTimer;
+  @override
+  void initState() {
+    super.initState();
+    fetchData();
+    fetchData2();
+    notificationTimer = Timer.periodic(Duration(minutes: 30), (timer) {
+      if (isTemperatureAbove20(temp1Data) ||
+          isTemperatureAbove20(temp2Data) ||
+          isTemperatureAbove20(temp3Data) ||
+          isTemperatureAbove20(temp4Data)) {
+        showTemperatureNotification();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    // Cancel the timer when the widget is disposed to avoid memory leaks
+    notificationTimer?.cancel();
+    super.dispose();
+  }
+
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  Future<void> initializeNotifications(BuildContext context) async {
+    const AndroidInitializationSettings androidInitializationSettings =
+        AndroidInitializationSettings(
+            '@mipmap/ic_launcher'); // Replace with your app's icon
+
+    const InitializationSettings initializationSettings =
+        InitializationSettings(
+      android: androidInitializationSettings,
+    );
+
+    await flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      // No need for onSelectNotification in newer versions
+      onDidReceiveNotificationResponse: (payload) async {
+        // Handle the notification tap here
+        if (payload != null) {
+          // Do something when the notification is tapped
+        }
+      },
+    );
+  }
+
+  Future<void> showTemperatureNotification() async {
+    var androidPlatformChannelSpecifics = const AndroidNotificationDetails(
+      'you_can_name_it_whatever',
+      'flutterfcm',
+      playSound: true,
+      sound: RawResourceAndroidNotificationSound('mix'),
+      importance: Importance.max,
+      priority: Priority.high,
+    );
+
+    NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+
+    if (isTemperatureAbove20(temp1Data)) {
+      await flutterLocalNotificationsPlugin.show(
+        0,
+        'Temperature Alert!',
+        'Temperature is above 30°C',
+        platformChannelSpecifics,
+        payload: 'TemperatureAlert',
+      );
+      setState(() {
+        notificationCount++;
+      });
+    }
+  }
+
+  void _onNavItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   List<Map<String, dynamic>> temp1Data = [];
   List<Map<String, dynamic>> temp2Data = [];
@@ -38,13 +122,6 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
   List<Map<String, dynamic>> temp4Data = [];
   List<Map<String, dynamic>> humi3Data = [];
   List<Map<String, dynamic>> humi4Data = [];
-
-  @override
-  void initState() {
-    super.initState();
-    fetchData();
-    fetchData2();
-  }
 
   Future<void> fetchData() async {
     final urls = ['temp1', 'temp2', 'humi1', 'humi2'];
@@ -61,6 +138,8 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
         humi1Data = List.from(jsonDecode(validResponses[2].body));
         humi2Data = List.from(jsonDecode(validResponses[3].body));
       });
+      showTemperatureNotification();
+      // Check for temperature and send a notification
     }
   }
 
@@ -79,37 +158,31 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
         humi3Data = List.from(jsonDecode(validResponses[2].body));
         humi4Data = List.from(jsonDecode(validResponses[3].body));
       });
+      showTemperatureNotification();
+      // Check for temperature and send a notification
     }
   }
 
-  void _onNavItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
-  bool isTemperatureAbove25() {
-    for (var dataPoint in [
-      ...temp1Data,
-      ...temp2Data,
-      ...temp3Data,
-      ...temp4Data,
-    ]) {
+  bool isTemperatureAbove20(List<Map<String, dynamic>> data) {
+    for (var dataPoint in data.take(2)) {
       final dynamic temperatureValue = dataPoint['DATA'];
-      if (temperatureValue != null && temperatureValue is num) {
-        final double temperature = temperatureValue.toDouble();
-        if (temperature > 10) {
-          return true; // At least one temperature is above 25°C
+      print(temperatureValue);
+      if (temperatureValue != null) {
+        final double temperature = double.parse(temperatureValue);
+        print(temperature);
+        if (temperature > 20.0) {
+          return true; // At least one of the last two temperatures is above 20°C
         }
       }
     }
 
-    return false; // No temperature is above 25°C
+    return false; // None of the last two temperatures is above 20°C
   }
 
   @override
   Widget build(BuildContext context) {
-    final List _screens = [
+    initializeNotifications(context);
+    final List<Widget> _screens = [
       TempScreen(
         temp1Data: temp1Data,
         temp2Data: temp2Data,
@@ -120,7 +193,6 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
         humi3Data: humi3Data,
         humi4Data: humi4Data,
       ),
-
       LoginScreen(),
       const RegistrationScreen(),
       const profilePage(),
@@ -130,13 +202,20 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Mist Chamber'),
-        actions: <Widget>[
+        actions: [
           IconButton(
             icon: const Icon(
               Icons.notifications,
               color: Colors.white,
             ),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SettingPage(),
+                ),
+              );
+            },
           )
         ],
       ),
