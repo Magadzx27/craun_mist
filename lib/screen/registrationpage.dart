@@ -1,4 +1,5 @@
 import 'package:craun_mist/rounded_button.dart';
+import 'package:craun_mist/screen/loginpage.dart';
 import 'package:flutter/material.dart';
 
 class RegistrationScreen extends StatefulWidget {
@@ -156,7 +157,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 ),
                 TextButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => LoginScreen()));
                     },
                     child: const Text(
                       'Login',

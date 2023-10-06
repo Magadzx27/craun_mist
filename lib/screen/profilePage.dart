@@ -22,7 +22,7 @@ class _profilePageState extends State<profilePage> {
             const SizedBox(height: 20.0),
             const CircleAvatar(
               radius: 80.0,
-              backgroundImage: AssetImage('assets/profile_picture.jpg'),
+              // backgroundImage: AssetImage('assets/profile_picture.jpg'),
             ),
             const SizedBox(height: 20.0),
             const Text(

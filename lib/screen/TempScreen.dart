@@ -39,6 +39,11 @@ class _TempScreenState extends State<TempScreen> {
   void initState() {
     super.initState();
     // Start a timer to update the last update time every second
+    timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        lastUpdateTime = DateTime.now().millisecondsSinceEpoch;
+      });
+    });
   }
 
   @override

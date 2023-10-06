@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'package:craun_mist/screen/SettingPage.dart';
 import 'package:craun_mist/screen/TempScreen.dart';
+import 'package:craun_mist/screen/manualControl.dart';
 import 'package:craun_mist/screen/profilePage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'loginpage.dart';
 import 'registrationpage.dart';
 import 'dart:core';
@@ -16,7 +16,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const AuthenticationWrapper();
+    return AuthenticationWrapper();
   }
 }
 
@@ -74,9 +74,9 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
       // No need for onSelectNotification in newer versions
       onDidReceiveNotificationResponse: (payload) async {
         // Handle the notification tap here
-        if (payload != null) {
-          // Do something when the notification is tapped
-        }
+        // if (payload != null) {
+        //   // Do something when the notification is tapped
+        // }
       },
     );
   }
@@ -193,9 +193,10 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
         humi3Data: humi3Data,
         humi4Data: humi4Data,
       ),
-      LoginScreen(),
+      const ManualControlPage(),
       const RegistrationScreen(),
       const profilePage(),
+      SettingPage(),
       // Add more screen widgets as needed
     ];
 
@@ -209,35 +210,94 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
               color: Colors.white,
             ),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SettingPage(),
-                ),
-              );
+              _onNavItemTapped(
+                  _screens.length - 1); // Navigate to the Notifications screen
             },
           )
         ],
       ),
-      bottomNavigationBar: CurvedNavigationBar(
-        backgroundColor: Colors.orangeAccent,
-        items: const <Widget>[
-          Icon(Icons.home, color: Colors.lightBlueAccent),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: Icon(Icons.thumb_up_alt_outlined,
-                color: Colors.lightBlueAccent),
+      bottomNavigationBar: NavigationBar(
+        backgroundColor: Colors.white,
+        onDestinationSelected: (int index) {
+          setState(() {
+            _selectedIndex = index;
+            _onNavItemTapped;
+          });
+        },
+        selectedIndex: _selectedIndex,
+        indicatorColor: Colors.lightBlueAccent,
+        destinations: const [
+          NavigationDestination(
+            selectedIcon: Icon(Icons.home),
+            icon: Icon(
+              Icons.home_outlined,
+              color: Colors.lightBlueAccent,
+            ),
+            label: 'Home',
           ),
-          Icon(Icons.calendar_month_outlined, color: Colors.lightBlueAccent),
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Icon(Icons.account_circle_rounded,
-                color: Colors.lightBlueAccent),
+          NavigationDestination(
+            selectedIcon: Icon(Icons.thumb_up),
+            icon: Icon(
+              Icons.thumb_up_alt_outlined,
+              color: Colors.lightBlueAccent,
+            ),
+            label: 'Thumb up',
+          ),
+          NavigationDestination(
+            selectedIcon: Icon(Icons.calendar_month),
+            icon: Icon(
+              Icons.calendar_month_outlined,
+              color: Colors.lightBlueAccent,
+            ),
+            label: 'Calendar',
+          ),
+          NavigationDestination(
+            selectedIcon: Icon(
+              Icons.account_circle_rounded,
+            ),
+            icon: Icon(
+              Icons.account_circle_outlined,
+              color: Colors.lightBlueAccent,
+            ),
+            label: 'Profile',
+          ),
+          NavigationDestination(
+            selectedIcon: Icon(Icons.settings_applications),
+            icon: Icon(
+              Icons.settings_applications_outlined,
+              color: Colors.lightBlueAccent,
+            ),
+            label: 'Setting',
           ),
         ],
-        index: _selectedIndex,
-        onTap: _onNavItemTapped,
       ),
+      // bottomNavigationBar: CurvedNavigationBar(
+      //   backgroundColor: Colors.orangeAccent,
+      //   items: const [
+      //     Icon(
+      //       Icons.home,
+      //       color: Colors.lightBlueAccent,
+      //     ),
+      //     Icon(
+      //       Icons.thumb_up_alt_outlined,
+      //       color: Colors.lightBlueAccent,
+      //     ),
+      //     Icon(
+      //       Icons.calendar_month_outlined,
+      //       color: Colors.lightBlueAccent,
+      //     ),
+      //     Icon(
+      //       Icons.account_circle_rounded,
+      //       color: Colors.lightBlueAccent,
+      //     ),
+      //     Icon(
+      //       Icons.notifications,
+      //       color: Colors.lightBlueAccent,
+      //     ),
+      //   ],
+      //   index: _selectedIndex,
+      //   onTap: _onNavItemTapped,
+      // ),
       body: _screens[_selectedIndex],
     );
   }

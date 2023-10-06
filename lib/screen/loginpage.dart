@@ -11,9 +11,6 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool showSpinner = false;
-  // final _auth = FirebaseAuth.instance;
-  // late String email;
-  // late String password;
 
   @override
   Widget build(BuildContext context) {
@@ -48,11 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       bottomLeft: Radius.circular(16.0),
                       bottomRight: Radius.circular(16.0)),
                 ),
-
                 labelText: 'Email',
-                // The MaterialStateProperty's value is a text style that is orange
-                // by default, but the theme's error color if the input decorator
-                // is in its error state.
                 labelStyle: MaterialStateTextStyle.resolveWith(
                   (Set<MaterialState> states) {
                     final Color color = states.contains(MaterialState.error)
@@ -83,9 +76,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       bottomRight: Radius.circular(16.0)),
                 ),
                 labelText: 'Password',
-                // The MaterialStateProperty's value is a text style that is orange
-                // by default, but the theme's error color if the input decorator
-                // is in its error state.
                 labelStyle: MaterialStateTextStyle.resolveWith(
                   (Set<MaterialState> states) {
                     final Color color = states.contains(MaterialState.error)
